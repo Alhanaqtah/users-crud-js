@@ -38,7 +38,7 @@ export class Storage {
         });
     }
 
-    async UserByUsername(username) {
+    async userByUsername(username) {
         return new Promise((resolve, reject) => {
             this.db.get('SELECT * FROM users WHERE username = ?', [username], function(err, row) {
                 if (err) {
@@ -56,6 +56,18 @@ export class Storage {
                     } else {
                         resolve(null);
                     }
+                }
+            });
+        });
+    }
+
+    async getUsers() {
+        return new Promise((resolve, reject) => {
+            this.db.all('SELECT id, username, name, surname, status, registration_date FROM users', function(err, row) {
+                if (err) {
+                    reject(new Error("Failed o get all users"));
+                } else {
+                    resolve(row);
                 }
             });
         });

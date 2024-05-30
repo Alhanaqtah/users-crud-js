@@ -13,7 +13,7 @@ export class Service {
 
         try {
             // Проверка существования пользователя
-            const existingUser = await this.storage.UserByUsername(username);
+            const existingUser = await this.storage.userByUsername(username);
             if (existingUser) {
                 throw ErrUserExists;
             }
@@ -29,6 +29,19 @@ export class Service {
             return id;        
         } catch (error) {
             console.error(op, 'Error while signing up:', error.message);
+            throw error;
+        }
+    }
+
+    async getUsers() {
+        const op = "service.user.getUsers";
+
+        try {
+            let users = await this.storage.getUsers();
+
+            return users;
+        } catch (error) {
+            console.error(op, "Failed to get all users:", error.message);
             throw error;
         }
     }

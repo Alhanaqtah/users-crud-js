@@ -23,5 +23,15 @@ export class Controller {
                 return res.status(500).json({ error: 'Internal error' });
             }
         }
-    };
+    }
+
+    async getUsers(req, res) {
+        try {
+            let users = await this.service.getUsers();
+
+            return res.status(200).json(users);
+        } catch (error) {
+            return res.status(500).json({ error: 'Internal error' });
+        }
+    }
 }
