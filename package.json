@@ -11,7 +11,9 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "express": "^4.19.2",
+    "sqlite": "^3.0.6",
     "sqlite3": "^5.1.7"
   },
   "type": "module"

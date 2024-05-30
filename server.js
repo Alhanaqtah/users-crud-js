@@ -7,7 +7,7 @@ import {Controller} from './internal/controller/users.js';
 
 // CONFIG
 const port = process.env.port || 5000;
-const storagePath = process.env || 'storage/storage.db';
+const storagePath = process.env.STORAGE_PATH || './storage/storage.db';
 
 // Repository
 let storage = new Storage(storagePath); 
@@ -29,7 +29,7 @@ app.get('/healthcheck', (req, res) => {
 });
 
 // Post user
-// app.post('/users', );
+app.post('/users', controller.signUp.bind(controller));
 
 
 // Get all users
