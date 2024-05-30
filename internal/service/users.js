@@ -58,6 +58,18 @@ export class Service {
 
             if (error.message === ErrUserNotFound.message)
                 throw ErrUserNotFound;
+        }
+    }
+
+    async removeByID(userID) {
+        const op = 'service.user.removeByID';
+        try {
+            await this.storage.removeByID(userID);
+        } catch (error) {
+            console.error(op, 'Error while removing user:', error.message);
+
+            if (error.message === ErrUserNotFound.message)
+                throw ErrUserNotFound;
             
             throw error;
         }

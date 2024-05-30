@@ -40,7 +40,7 @@ app.get('/users/:id', controller.getByID.bind(controller));
 // Patch user by id
 
 // Delete user by id
-
+app.delete('/users/:id', controller.removeByID.bind(controller));
 
 app.listen(port, () => {
     console.log(`Server is listening on port '${port}'`)

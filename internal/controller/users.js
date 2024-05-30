@@ -48,4 +48,18 @@ export class Controller {
             return res.status(500).json({error: 'Internal error'});
         }
     }
+
+    async removeByID(req, res) {
+        try {
+            const userID = req.params.id;
+
+            await this.service.removeByID(userID);
+
+            return res.status(200).json();
+        } catch (error) {
+            if (error === ErrUserNotFound)
+                return res.status(404).json({error: 'User not found'});
+            return res.status(500).json({error: 'Internal error'});
+        }
+    }
 }

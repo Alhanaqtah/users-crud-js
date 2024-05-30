@@ -5,10 +5,13 @@ export const ErrUserNotFound = new Error("User not found");
 export class Storage {
     constructor(storagePath) {
         this.storagePath = storagePath;
-        this.db = new sqlite3.Database(storagePath), (err) => {
+        this.db = new sqlite3.Database(storagePath, (err) => {
             if (err) {
-                throw new Error("Failed to init connection to database");
+                console.error("Failed to init connection to database:", err.message);
+                throw new Error("Failed to init connection to database: " + err.message);
             }
+
+            console.log("Database connection successfully initialized.");
 
             this.db.run(`
                 CREATE TABLE IF NOT EXISTS users (
@@ -22,10 +25,13 @@ export class Storage {
                 )
             `, (err) => {
                 if (err) {
-                    console.error("storage.storage.constructor", 'Failed to create table:', err);
+                    console.error("Failed to create table:", err.message);
+                    throw new Error("Failed to create table: " + err.message);
+                } else {
+                    console.log("Table 'users' created or already exists.");
                 }
             });
-        };
+        });
     }
     
     async createUser(username, passHash) {
@@ -89,5 +95,21 @@ export class Storage {
                 }
             });
         });
+    }
+
+    async removeByID(userID) {
+        return new Promise((resolve, reject) => {
+            this.db.run('DELETE FROM users WHERE id = ?', [userID], function(err) {
+                if (err) {
+                    reject(new Error("Failed to remove user: " + err));
+                } else {
+                    if (!this.changes) {
+                        reject(ErrUserNotFound)
+                    } else {
+                        resolve(null)
+                    }
+                }
+            })
+        })
     }
 }
