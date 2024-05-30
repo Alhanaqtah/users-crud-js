@@ -31,11 +31,11 @@ app.get('/healthcheck', (req, res) => {
 // Post user
 app.post('/users', controller.signUp.bind(controller));
 
-
 // Get all users
 app.get('/users', controller.getUsers.bind(controller));
 
 // Get user by id
+app.get('/users/:id', controller.getByID.bind(controller));
 
 // Patch user by id
 

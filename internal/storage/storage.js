@@ -1,5 +1,7 @@
 import sqlite3 from 'sqlite3';
 
+export const ErrUserNotFound = new Error("User not found");
+
 export class Storage {
     constructor(storagePath) {
         this.storagePath = storagePath;
@@ -40,7 +42,7 @@ export class Storage {
 
     async userByUsername(username) {
         return new Promise((resolve, reject) => {
-            this.db.get('SELECT * FROM users WHERE username = ?', [username], function(err, row) {
+            this.db.get('SELECT * FROM users WHERE username = ?', [username], (err, row) => {
                 if (err) {
                     reject(new Error("Failed to get user: " + err));
                 } else {
@@ -63,11 +65,27 @@ export class Storage {
 
     async getUsers() {
         return new Promise((resolve, reject) => {
-            this.db.all('SELECT id, username, name, surname, status, registration_date FROM users', function(err, row) {
+            this.db.all('SELECT id, username, name, surname, status, registration_date FROM users', (err, row) => {
                 if (err) {
                     reject(new Error("Failed o get all users"));
                 } else {
                     resolve(row);
+                }
+            });
+        });
+    }
+
+    async getByID(userID) {
+        return new Promise((resolve, reject) => {
+            this.db.get('SELECT username, name, surname, status, registration_date FROM users WHERE id = ?', [userID], (err, row) => {
+                if (err) {
+                    reject(new Error("Failed to get user by id:" + err));
+                } else {
+                    if (row !== undefined) {
+                        resolve(row);
+                    } else {
+                        reject(ErrUserNotFound);
+                    }
                 }
             });
         });

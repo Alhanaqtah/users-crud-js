@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs';
 
-
 export const ErrUserExists = new Error("User already exists");
+export const ErrUserNotFound = new Error("User not found");
 
 export class Service {
     constructor(storage) {
@@ -42,6 +42,23 @@ export class Service {
             return users;
         } catch (error) {
             console.error(op, "Failed to get all users:", error.message);
+            throw error;
+        }
+    }
+
+    async getByID(userID) {
+        const op = 'service.user.getByID';
+
+        try {
+            const user = await this.storage.getByID(userID);
+            
+            return user;
+        } catch (error) {
+            console.error(op, 'Error while getting user:', error.message);
+
+            if (error.message === ErrUserNotFound.message)
+                throw ErrUserNotFound;
+            
             throw error;
         }
     }

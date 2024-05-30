@@ -1,4 +1,4 @@
-import { Service, ErrUserExists } from '../service/users.js';
+import { ErrUserExists, ErrUserNotFound } from '../service/users.js';
 
 export class Controller {
     constructor(service) {
@@ -32,6 +32,20 @@ export class Controller {
             return res.status(200).json(users);
         } catch (error) {
             return res.status(500).json({ error: 'Internal error' });
+        }
+    }
+
+    async getByID(req, res) {
+        try {
+            const userID = req.params.id;
+
+            const user = await this.service.getByID(userID);
+
+            return res.status(200).json(user);
+        } catch (error) {
+            if (error === ErrUserNotFound)
+                return res.status(404).json({error: 'User not found'});
+            return res.status(500).json({error: 'Internal error'});
         }
     }
 }
