@@ -87,7 +87,7 @@ export class Storage {
                 if (err) {
                     reject(new Error("Failed to get user by id:" + err));
                 } else {
-                    if (row !== undefined) {
+                    if (row) {
                         resolve(row);
                     } else {
                         reject(ErrUserNotFound);
@@ -111,5 +111,45 @@ export class Storage {
                 }
             })
         })
+    }
+
+    async updateByID(userID, updates) {
+        return new Promise((resolve, reject) => {
+            const fields = [];
+            const values = [];
+    
+            if (updates.username !== undefined) {
+                fields.push('username = ?');
+                values.push(updates.username);
+            }
+            if (updates.name !== undefined) {
+                fields.push('name = ?');
+                values.push(updates.name);
+            }
+            if (updates.surname !== undefined) {
+                fields.push('surname = ?');
+                values.push(updates.surname);
+            }
+            if (updates.status !== undefined) {
+                fields.push('status = ?');
+                values.push(updates.status);
+            }
+    
+            values.push(userID);
+
+            const sql = `UPDATE users SET ${fields.join(', ')} WHERE id = ?`;
+    
+            this.db.run(sql, values, function(err) {
+                if (err) {
+                    reject(new Error("Failed to update user: " + err));
+                } else {
+                    if (this.changes > 0) {
+                        resolve(null);
+                    } else {
+                        reject(ErrUserNotFound);
+                    }
+                }
+            });
+        });
     }
 }

@@ -62,4 +62,25 @@ export class Controller {
             return res.status(500).json({error: 'Internal error'});
         }
     }
+
+    async updateByID(req, res) {
+        try {
+            const userID = req.params.id;
+
+            const updates = req.body; 
+
+            if (updates.username === "")
+                return res.status(404).json({error: 'Invalid values'});
+
+            await this.service.updateByID(userID, updates);
+
+            return res.status(200).json({});
+        } catch (error) {
+            if (error === ErrUserNotFound)
+                return res.status(404).json({error: 'User not found'});
+            if (error === ErrUserExists)
+                return res.status(409).json({error: 'Username already taken'});
+            return res.status(500).json({error: 'Internal error'});
+        }
+    }
 }

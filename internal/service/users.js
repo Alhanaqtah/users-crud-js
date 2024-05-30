@@ -74,4 +74,24 @@ export class Service {
             throw error;
         }
     }
+
+    async updateByID(userID, updates) {
+        const op = 'service.user.patchByID';
+        
+        try {
+            if (updates.username) {
+                const existingUser = await this.storage.userByUsername(updates.username);
+                if (existingUser && existingUser.id !== userID) {
+                    throw ErrUserExists;
+                }
+            }
+
+            await this.storage.updateByID(userID, updates);
+        } catch (error) {
+            console.error(op, 'Error while updating user:', error.message);
+            if (error.message === ErrUserNotFound.message)
+                throw ErrUserNotFound;
+            throw error;
+        }
+    }
 }

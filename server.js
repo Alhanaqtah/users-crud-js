@@ -38,6 +38,7 @@ app.get('/users', controller.getUsers.bind(controller));
 app.get('/users/:id', controller.getByID.bind(controller));
 
 // Patch user by id
+app.patch('/users/:id', controller.updateByID.bind(controller));
 
 // Delete user by id
 app.delete('/users/:id', controller.removeByID.bind(controller));
